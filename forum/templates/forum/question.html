@@ -1,0 +1,73 @@
+{% extends "forum/base.html" %} {% load static %}{% block slider %}
+<div
+  class="flex flex-col space-y-2 shadow-md w-full bg-cover bg-center h-56 items-center"
+  style="background-image: url('/static/forum/bg.png')"
+>
+<form method="post" action="{% url 'search' %}" class="text-center mt-28">
+    {% csrf_token %}
+    <input class="rounded-md" type="text" name="keyword" value="" />
+    <input
+      class="text-rose-500 ml-2 hover:text-gray-500 hover:cursor-pointer"
+      type="submit"
+      name=""
+      value="搜索"
+    />
+  </form>
+  <div class="flex flex-row text-sm text-gray-500 space-x-3 underline">
+    <p>热门搜索</p>
+    <p>python</p>
+    <p>django</p>
+    <p>recommend</p>
+  </div>
+</div>
+{% endblock %} {% block content %}
+<h1 class="p-2 text-2xl font-bold text-gray-500">问答</h1>
+<div
+  class="grid grid-cols-3 gap-2 p-3 text-sm text-gray-500 shadow-md rounded-md"
+>
+  <div class="flex flex-col items-center space-y-2">
+    <img src="{% static 'forum/exam-ask.jpg'  %}" class="w-56" alt="" />
+    <p><a href="{% url 'question' 'exam' %}">考试相关</a></p>
+  </div>
+  <div class="flex flex-col items-center space-y-2">
+    <img src="{% static 'forum/compet-ask.jpg'  %}" class="w-56" alt="" />
+    <p><a href="{% url 'question' 'compete' %}">竞赛相关</a></p>
+  </div>
+  <div class="flex flex-col items-center space-y-2">
+    <img src="{% static 'forum/research-ask.jpg' %}" class="w-56" alt="" />
+    <p><a href="{% url 'question' 'research' %}">科研相关</a></p>
+  </div>
+</div>
+<h1 class="p-2 text-2xl font-bold text-gray-500 mt-5">{{ title }}问答</h1>
+<div class="flex flex-col p-3 text-sm text-gray-500 shadow-md rounded-md">
+  <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
+    <table class="w-full text-sm text-left text-gray-500">
+      <thead class="text-xs text-gray-700 uppercase bg-gray-50">
+        <tr>
+          <th scope="col" class="px-6 py-3">问题简介</th>
+          <th scope="col" class="px-6 py-3">提问者</th>
+          <th scope="col" class="px-6 py-3">提问时间</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for question in questions %}
+        <tr
+          class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
+        >
+          <th
+            scope="row"
+            class="px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap"
+          >
+            <a href="{% url 'single_question' question.id %}"
+              >{{ question.description }}</a
+            >
+          </th>
+          <td class="px-6 py-4">{{ question.author.username }}</td>
+          <td class="px-6 py-4"><time>{{ question.up_dated }}</time></td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

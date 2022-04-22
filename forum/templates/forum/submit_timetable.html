@@ -1,0 +1,21 @@
+{% extends "forum/base.html" %} {% load static %} {% block content %}
+<h1 class="p-2 text-2xl font-bold text-gray-500">提交课程表</h1>
+<div
+  class="flex flex-col space-y-4 p-3 text-sm text-gray-500 shadow-md rounded-md bg-slate-50"
+>
+  <form
+    method="post"
+    enctype="multipart/form-data"
+    class="flex flex-col space-y-4 ml-10"
+  >
+    {% csrf_token %}
+    <label
+      >选择课程表(*.xlsx, *.csv):
+      <input type="file" name="file" class="ml-3 p-1" required />
+    </label>
+    <button type="submit" class="p-2 w-1/2 bg-blue-500 rounded-md text-white">
+      提交
+    </button>
+  </form>
+</div>
+{% endblock %}

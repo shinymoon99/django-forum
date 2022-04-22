@@ -1,0 +1,77 @@
+{% extends "forum/base.html" %} {% load static %} {% block content %}
+<h1 class="p-2 text-2xl font-bold text-gray-500">{{ resource.title }}</h1>
+<div
+  class="flex flex-col space-y-4 p-3 text-sm text-gray-500 shadow-md rounded-md bg-slate-50"
+>
+  <div class="flex flex-row text-sm text-blue-700 justify-between">
+    <p>提供者: {{ resource.author.username }}</p>
+    <p><time datetime="">上传时间: {{ resource.up_dated }}</time></p>
+  </div>
+  <p>内容简介: {{ resource.description }}</p>
+  {% if resource.file %} {% if resource.status == 0 %}
+  <p class="underline"><a href="{{ resource.file.url }}">下载资源</a></p>
+  {% else %} {% if user.is_authenticated %} {% if bought %}
+  {% if bought == 2 %}
+  <p class='text-red-500'>已购买</p>
+  {% else %}
+  <p class="text-red-500">vip权限下载</p>
+  {% endif %}
+  <p class="underline"><a href="{{ resource.file.url }}">下载资源</a></p>
+  {% else %}
+  <p>需要积分: {{ resource.price }}</p>
+  <p class="underline"><a href="{% url 'buy' resource.id %}">购买资源</a></p>
+  {% endif %} {% else %}
+  <p class="underline"><a href="{% url 'login' %}">购买资源, 请先登陆</a></p>
+  {% endif %} {% endif %}{% endif %}
+
+  {% if user.is_authenticated %}
+  {% if collect %}
+  <p class='text-sm text-right underline text-red-700'><a href="{% url 'remove_resource' resource.id %}">删除收藏</a></p>
+  {% else %}
+  <p class='text-sm text-right underline'><a href="{% url 'collect_resource' resource.id %}">收藏</a></p>
+  {% endif %}
+  {% endif %}
+</div>
+
+<h1 class="p-2 text-xl text-gray-500 mt-5">提交评论</h1>
+<div
+  class="flex flex-col space-y-2 p-1 text-sm text-gray-500 shadow-md rounded-md bg-slate-50"
+>
+  {% if user.is_authenticated %}
+  <form method="post" class="flex flex-col space-y-4 ml-10">
+    {% csrf_token %}
+    <div class="flex flex-col space-y-2">
+      <label>评论:</label>
+      <textarea
+        class="border-2"
+        name="context"
+        rows="4"
+        cols=""
+        required
+      ></textarea>
+    </div>
+    <button
+      type="submit"
+      name="comment"
+      class="p-1 w-full bg-blue-500 rounded-md text-white"
+    >
+      提交评论
+    </button>
+  </form>
+  {% else %}
+  <p>请<a href="{% url 'login' %}">登陆</a>后提交评论!</p>
+  {% endif %}
+</div>
+{% for comment in resource.comment_set.all %}
+<div
+  class="flex flex-row space-x-4 p-3 text-sm text-gray-500 shadow-md rounded-md bg-slate-50 mt-2"
+>
+  <div class="flex flex-col">
+    <p>{{ comment.user }}</p>
+    <p><time datetime="">{{ comment.up_dated }}</time></p>
+  </div>
+  <div class="flex flex-col pl-5">
+    <p>{{ comment.context }}</p>
+  </div>
+</div>
+{% endfor %} {% endblock %}

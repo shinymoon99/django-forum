@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title></title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    {% block header %}
+    {% endblock %}
+  </head>
+  <body class="font-sans leading-normal tracking-normal">
+    <nav class="p-2 mt-0 fixed w-full z-10 pin-t shadow-md h-18 bg-white">
+      <div class="container mx-auto flex flex-wrap items-center">
+        <div
+          class="flex w-full md:w-1/2 justify-center md:justify-start font-extrabold"
+        >
+          <a
+            class="text-gray-700 no-underline hover:text-gray-500 hover:no-underline"
+            href="{% url 'index' %}"
+          >
+            <span class="text-2xl pl-2">问答论坛</span>
+          </a>
+        </div>
+        <div
+          class="flex w-full pt-2 content-center justify-between md:w-1/2 md:justify-end"
+        >
+          <ul
+            class="list-reset flex justify-between flex-1 md:flex-none items-center"
+          >
+            <li class="mr-3">
+              <a
+                class="inline-block py-2 px-4 text-gray-700 no-underline hover:text-gray-500"
+                href="{% url 'resource' 'all' %}"
+                >全部资源</a
+              >
+            </li>
+            <li class="mr-3">
+              <a
+                class="inline-block text-grey-dark no-underline hover:text-grey-lighter hover:text-underline py-2 px-4"
+                href="{% url 'question' 'all' %}"
+                >全部问答</a
+              >
+            </li>
+            {% if user.is_authenticated %}
+            <li class="mr-3">
+              <a
+                class="inline-block text-grey-dark no-underline hover:text-grey-300 hover:text-underline py-2 px-4"
+                href="{% url 'logout' %}"
+                >退出登陆</a
+              >
+            </li>
+            {% else %}
+            <li class="mr-3">
+              <a
+                class="inline-block text-grey-dark no-underline hover:text-grey-lighter hover:text-underline py-2 px-4"
+                href="{% url 'login' %}"
+                >登陆</a
+              >
+            </li>
+            <li class="mr-3">
+              <a
+                class="inline-block text-grey-dark no-underline hover:text-grey-lighter hover:text-underline py-2 px-4"
+                href="{% url 'register' %}"
+                >注册</a
+              >
+            </li>
+            {% endif %}
+          </ul>
+        </div>
+      </div>
+    </nav>
+    <main class="flex flex-col pt-16 items-center">
+      <div class="flex flex-col max-w-6xl mx-auto items-center">
+        {% if messages %} {% for message in messages %}
+        <div
+          class="{% if message.tags == 'error' %} bg-rose-500 {% else %} bg-green-500 {% endif %} text-white p-2"
+        >
+          {{ message }}
+        </div>
+        {% endfor %} {% endif %}
+      </div>
+      {% block slider %} {% endblock %}
+      <div class="w-5/6 grid grid-cols-4 gap-4 pt-4">
+        <div class="col-span-3">{% block content %} {% endblock %}</div>
+        <div class="mt-9">
+          {% block rightbar %}
+          <div
+            class="flex flex-col bg-slate-100 shadow-md rounded-md space-y-3 text-gray-500 p-3"
+          >
+            {% if user.is_authenticated %}
+            <p class="text-xl font-bold text-blue-500">用户信息</p>
+	    <p class="text-sm">用户名: {{ user.username }} | 积分:{{ user.profile.scors }}{% if user.profile.status == 1 %} | <strong class="text-red-500">vip</strong> {% endif %}</p>
+            <p class="text-sm ml-5 underline">
+              <a href="{% url 'submit_resource' %}">提交资源</a>
+            </p>
+            <p class="text-sm ml-5 underline">
+              <a href="{% url 'submit_question' %}">提交问答</a>
+            </p>
+            <p class="text-sm ml-5 underline">
+              <a href="{% url 'submit_timetable' %}">提交课程表</a>
+            </p>
+            <p class="text-sm ml-5 underline">
+              <a href="{% url 'check_timetable' %}">查询空教室</a>
+            </p>
+            <p class="text-sm ml-5 underline">
+              <a href="{% url 'resource_rec' %}">推荐资源</a>
+            </p>
+            <p class="text-sm ml-5 underline">
+              <a href="{% url 'question_rec' %}">推荐问题</a>
+            </p>
+            <p class="text-sm ml-5 underline">
+	    <a href="{% url 'vip' %}">升级vip</a>
+            </p>
+            <hr class="" />
+            {% endif %}
+            <p class="text-xl font-bold">热门资源</p>
+	    {% if hot_res %}
+	    {% for re in hot_res %}
+	    <p class="text-sm underline"><a href="{% url 'single_resource' re.id %}">{{ re.title|truncatechars:7 }}</a></p>
+	    {% endfor %}
+	    {% else %}
+            <p class="text-sm">资源..</p>
+	    {% endif %}
+            <hr class="" />
+            <p class="text-xl font-bold">热门问答</p>
+	    {% if hot_q %}
+	    {% for q in hot_q %}
+	    <p class="text-sm underline"><a href="{% url 'single_question' q.id %}">{{ q.description|truncatechars:20 }}</a></p>
+	    {% endfor %}
+	    {% else %}
+            <p class="text-sm">问答...</p>
+	    {% endif %}
+          </div>
+          {% endblock %}
+        </div>
+      </div>
+    </main>
+  </body>
+</html>

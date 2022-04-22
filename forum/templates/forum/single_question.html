@@ -1,0 +1,61 @@
+{% extends "forum/base.html" %} {% load static %} {% block content %}
+<h1 class="p-2 text-2xl font-bold text-gray-500">{{ resource.title }}</h1>
+<div
+  class="flex flex-col space-y-4 p-3 text-sm text-gray-500 shadow-md rounded-md bg-slate-50"
+>
+  <div class="flex flex-row text-sm text-blue-700 justify-between">
+    <p>提问者: {{ question.author.username }}</p>
+    <p><time datetime="">提问时间: {{ question.up_dated }}</time></p>
+  </div>
+  <p>问题: {{ question.description }}</p>
+  {% if user.is_authenticated %}
+  {% if collect %}
+  <p class='text-sm text-right underline text-red-700'><a href="{% url 'remove_question' question.id %}">删除收藏</a></p>
+  {% else %}
+  <p class='text-sm text-right underline'><a href="{% url 'collect_question' question.id %}">收藏</a></p>
+  {% endif %}
+  {% endif %}
+</div>
+
+<h1 class="p-2 text-xl text-gray-500 mt-5">提交回复</h1>
+<div
+  class="flex flex-col space-y-2 p-1 text-sm text-gray-500 shadow-md rounded-md bg-slate-50"
+>
+  {% if user.is_authenticated %}
+  <form method="post" class="flex flex-col space-y-4 ml-10">
+    {% csrf_token %}
+    <div class="flex flex-col space-y-2">
+      <label>回答:</label>
+      <textarea
+        class="border-2"
+        name="context"
+        rows="4"
+        cols=""
+        required
+      ></textarea>
+    </div>
+    <button
+      type="submit"
+      name="comment"
+      class="p-1 w-full bg-blue-500 rounded-md text-white"
+    >
+      提交评论
+    </button>
+  </form>
+  {% else %}
+  <p>请<a href="{% url 'login' %}">登陆</a>后提交回答!</p>
+  {% endif %}
+</div>
+{% for comment in question.answer_set.all %}
+<div
+  class="flex flex-row space-x-4 p-3 text-sm text-gray-500 shadow-md rounded-md bg-slate-50 mt-2"
+>
+  <div class="flex flex-col">
+    <p>{{ comment.user }}</p>
+    <p><time datetime="">{{ comment.up_dated }}</time></p>
+  </div>
+  <div class="flex flex-col pl-5">
+    <p>{{ comment.context }}</p>
+  </div>
+</div>
+{% endfor %} {% endblock %}

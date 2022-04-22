@@ -1,0 +1,36 @@
+{% extends "forum/base.html" %} {% load static %}{% block slider %}
+<div
+  class="flex flex-col space-y-2 shadow-md w-full bg-cover bg-center h-56 items-center"
+  style="background-image: url('/static/forum/bg.png')"
+>
+  <form method="post" action="{% url 'search' %}" class="text-center mt-28">
+    {% csrf_token %}
+    <input class="rounded-md" type="text" name="keyword" value="" />
+    <input
+      class="text-rose-500 ml-2 hover:text-gray-500 hover:cursor-pointer"
+      type="submit"
+      name=""
+      value="搜索"
+    />
+  </form>
+  <div class="flex flex-row text-sm text-gray-500 space-x-3 underline">
+    <p>热门搜索</p>
+    <p>python</p>
+    <p>django</p>
+    <p>recommend</p>
+  </div>
+</div>
+{% endblock %} {% block content %}
+<h1 class="p-2 text-2xl font-bold text-gray-500">升级VIP</h1>
+<div class="bg-slate-100 items-center mx-auto p-2 rounded-md shadow-md">
+{% if user.profile.status == 1 %}
+<p class="text-gray-700 p-2 text-center">您已经是VIP用户</p>
+{% else %}
+<form method="post" class="p-4 flex flex-col space-y-4">
+  {% csrf_token %}
+  <p class="text-gray-700">vip 可以下载所有资源...</p>
+  <input type="submit" name="" class="bg-blue-500 text-white p-2 rounded-md hover:cursor-pointer" value="升级vip" />
+</form>
+{% endif %} 
+</div>
+{% endblock %}

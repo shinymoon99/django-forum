@@ -1,0 +1,32 @@
+{% extends "forum/base.html" %} {% load static %} {% block content %}
+<h1 class="p-2 text-2xl font-bold text-gray-500">提问</h1>
+<div
+  class="flex flex-col space-y-4 p-3 text-sm text-gray-500 shadow-md rounded-md bg-slate-50"
+>
+  <form
+    method="post"
+    enctype="multipart/form-data"
+    class="flex flex-col space-y-4 ml-10"
+  >
+    {% csrf_token %}
+    <label>问题描述: </label>
+    <textarea name="description" class="ml-13 border-2 p-1" rows="7" required>
+    </textarea>
+    <label
+      >类别:
+      <select name="category" class="ml-9 p-1">
+        <option value="0">考试相关</option>
+        <option value="1">竞赛相关</option>
+        <option value="2">科研相关</option>
+      </select>
+    </label>
+    <label
+      >选择文件(*.png,*.jpg):
+      <input type="file" name="file" class="ml-3 p-1" />
+    </label>
+    <button type="submit" class="p-2 w-full bg-blue-500 rounded-md text-white">
+      提交
+    </button>
+  </form>
+</div>
+{% endblock %}

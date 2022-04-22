@@ -1,0 +1,48 @@
+from django.urls import path
+from django.contrib.auth import views as auth_views
+from . import views
+
+urlpatterns = [
+    path("", views.home, name="index"),
+    path("register/", views.register, name="register"),
+    path("vip/", views.vip, name="vip"),
+    path("search/", views.search, name="search"),
+    path("<cat>/resource/", views.resource, name="resource"),
+    path("<cat>/question/", views.question, name="question"),
+    path("<id>/single_resource/",
+         views.single_resource,
+         name="single_resource"),
+    path("<id>/single_question/",
+         views.single_question,
+         name="single_question"),
+    path("<id>/collect_question/",
+         views.collect_question,
+         name="collect_question"),
+    path("<id>/collect_resource/",
+         views.collect_resource,
+         name="collect_resource"),
+    path("<id>/remove_question/",
+         views.remove_question,
+         name="remove_question"),
+    path("<id>/remove_resource/",
+         views.remove_resource,
+         name="remove_resource"),
+    path("<id>/buy/", views.buy_resource, name="buy"),
+    path("submit_timetable/", views.submit_timetable, name="submit_timetable"),
+    path("question_rec/", views.recommend_question, name="question_rec"),
+    path("resource_rec/", views.recommend_resource, name="resource_rec"),
+    path("submit_resource/", views.submit_resource, name="submit_resource"),
+    path("submit_question/", views.submit_question, name="submit_question"),
+    path("<room>/use_room/", views.use_room, name="use_room"),
+    path("check_timetable/", views.check_timetable, name="check_timetable"),
+    path(
+        "login/",
+        auth_views.LoginView.as_view(template_name="forum/login.html"),
+        name="login",
+    ),
+    path(
+        "logout/",
+        auth_views.LogoutView.as_view(template_name="forum/logout.html"),
+        name="logout",
+    ),
+]

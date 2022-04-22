@@ -1,0 +1,82 @@
+{% extends "forum/base.html" %} {% load static %} {% block content %}
+<h1 class="p-2 text-2xl font-bold text-gray-500">查询空教室</h1>
+<div
+  class="flex flex-col space-y-4 p-3 text-sm text-gray-500 shadow-md rounded-md bg-slate-50"
+>
+  <form
+    method="post"
+    enctype="multipart/form-data"
+    class="flex flex-col space-y-4 ml-10"
+  >
+    {% csrf_token %}
+    <div class="flex flex-row justify-evenly">
+    	
+    <label
+      >周次:
+      <select name="week" class="ml-9 p-1">
+        {% for week in weeks %}
+	<option value="{{ week }}" {% if sweek and sweek == week %}selected {% endif %} >第{{week}}周</option>
+        {% endfor %}
+      </select>
+    </label>
+    <label
+      >星期:
+      <select name="day" class="ml-9 p-1">
+	      <option value="1" {% if sday and sday == 1 %} selected {% endif %}>星期一</option>
+        <option value="2" {% if sday and sday == 2 %} selected {% endif %}>星期二</option>
+        <option value="3" {% if sday and sday == 3 %} selected {% endif %}>星期三</option>
+        <option value="4" {% if sday and sday == 4 %} selected {% endif %}>星期四</option>
+        <option value="5" {% if sday and sday == 5 %} selected {% endif %}>星期五</option>
+        <option value="6" {% if sday and sday == 6 %} selected {% endif %}>星期六</option>
+        <option value="7" {% if sday and sday == 7 %} selected {% endif %}>星期日</option>
+      </select>
+    </label>
+    <label
+      >节次:
+      <select name="one" class="ml-9 p-1">
+        {% for one in ones %}
+        <option value="{{ one }}" {% if sone and sone == one %}selected {% endif %} >第{{one}}节</option>
+        {% endfor %}
+      </select>
+    </label>
+    </div>
+    <button type="submit" class="p-2 w-full bg-blue-500 rounded-md text-white">
+      查询空教室
+    </button>
+  </form>
+</div>
+{% if avaiable_rooms %}
+<h1 class="p-2 text-2xl font-bold text-gray-500 mt-5">空教室</h1>
+<div class="flex flex-col p-3 text-sm text-gray-500 shadow-md rounded-md">
+  <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
+    <table class="w-full text-sm text-left text-gray-500">
+      <thead class="text-xs text-gray-700 uppercase bg-gray-50">
+        <tr>
+          <th scope="col" class="px-6 py-3">教室</th>
+          <th scope="col" class="px-6 py-3">预定</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for room in avaiable_rooms %}
+        <tr
+          class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
+        >
+          <th
+            scope="row"
+            class="px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap"
+          >
+            {{ room }}
+          </th>
+		  <td class="px-6 py-4"><a href="{% url 'use_room' room %}">预定</a></td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% else %}
+{% if submit %}
+<h1 class="p-2 text-2xl font-bold text-gray-500 mt-5">当前时段没有空教室</h1>
+{% endif %}
+{% endif %}
+{% endblock %}
